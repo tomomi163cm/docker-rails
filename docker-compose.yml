@@ -1,17 +1,17 @@
-version: '2'
+version: '3'
 services:
   db:
     image: mysql:8.0.17
-    restart: always
+    ports:
+      - 33060:33060
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_ROOT_PASSWORD=tk130tmm81
     volumes:
-      - ./mysql/volumes:/var/lib/mysql
+      - db-store:/var/lib/mysql
       - ./mysql/confd:/etc/mysql/conf.d
   web:
     build: .
-    # command: bundle exec rails s -p 3000 -b '0.0.0.0'
-    command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/myapp
     ports:
@@ -23,3 +23,5 @@ services:
     environment:
       USER: "root"
       PASSWORD: "password"
+volumes:
+  db-store:
